@@ -1,25 +1,39 @@
-import { useState } from "react";
-import axios, { AxiosResponse } from "axios";
-import { UseFetchResponse } from "./interface";
+export default function useFetch(url, onSuccess) {
+  const c_url = useRef(url);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
 
-export const useFetch = <TData = unknown>(): UseFetchResponse<TData> => {
-  const [data, setData] = useState<TData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = async (url: string, headers?: Record<string, string>) => {
-    setIsLoading(true);
+  const refetch = useCallback(() => {
+    const controller = new AbortController();
+    (async function () {
+      try {
+        setFetching(true);
+        const res = await fetch(c_url.current, {
+          signal: controller.signal,
+          headers: {
+            
+          },
+        });
+        const data = await res.json();
+        if (data) setData(data);
+        onSuccess?.(data)
+      } catch (err) {
+        setError(err);
+      } finally {
+        setFetching(false);
+      }
+    })();
+    return () => {
+      controller.abort();
+    };
+  }, [])
 
-    try {
-      const response: AxiosResponse<TData> = await axios.get(url, { headers });
-      const data = response.data as TData;
-      setData(data);
-    } catch (error) {
-      setError(error as Error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
-  return { data, isLoading, error, fetchData };
-};
+  useEffect(() => {
+    return refetch()
+  }, []);
+
+  return { data, fetching, error, refetch };
+}
