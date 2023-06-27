@@ -1,4 +1,4 @@
-import { useCopyToClipboard } from "./useCopyToClipboard";
+import { useCopyToClipboard } from "./useCopyToClipboard.1";
 
 function Demo() {
    const { copiedRes, copyToClipboard } = useCopyToClipboard();

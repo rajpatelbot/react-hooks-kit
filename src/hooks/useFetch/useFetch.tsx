@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { UseFetchResponse } from "./interface";
 
-export const useFetch = <TData = unknown,>(): UseFetchResponse<TData> => {
+export function useFetch<TData = unknown>(): UseFetchResponse<TData> {
    const [data, setData] = useState<TData | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<Error | null>(null);
@@ -37,4 +37,4 @@ export const useFetch = <TData = unknown,>(): UseFetchResponse<TData> => {
    };
 
    return { data, isLoading, error, fetchData };
-};
+}
