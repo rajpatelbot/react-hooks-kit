@@ -2,5 +2,6 @@ export type Value = string | boolean | number;
 
 export type UseLocalStorageRes<TData> = [
    value: TData,
-   setValue: Dispatch<SetStateAction<TData>>
+   setValue: (newVal: TData) => void,
+   clearLocalStiorage: () => void
 ];
