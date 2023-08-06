@@ -5,7 +5,7 @@ import {
    textType,
 } from "./interface";
 
-export const useCopyToClipboard = (): CopyToClipboardInterface => {
+export function useCopyToClipboard(): CopyToClipboardInterface {
    const allowedType = ["string", "number"];
 
    const [copiedRes, setCopiedRes] = useState<copiedValueInterface>({
@@ -43,4 +43,4 @@ export const useCopyToClipboard = (): CopyToClipboardInterface => {
    };
 
    return { copiedRes, copyToClipboard };
-};
+}

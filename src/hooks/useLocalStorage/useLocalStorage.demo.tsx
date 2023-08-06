@@ -1,29 +1,37 @@
-import { useEffect } from "react";
 import { useLocalStorage } from "./useLocalStorage";
 
+interface Employee {
+   name: string;
+   pass: string;
+}
+
 export const UseLocalStorageDemo = () => {
-   const initialData = 0;
+   const [employee, setEmployee, clearLocalStorage] = useLocalStorage<
+      Employee[]
+   >("employees", null);
 
-   const { storedValue, getData, setData } = useLocalStorage(
-      "counter",
-      initialData
-   );
+   const handleIncr = () => {
+      const newEmp: Employee = { name: "Shiv", pass: "123" };
+      setEmployee([...employee, newEmp]);
+      // setEmployee(newEmp);
+   };
 
-   useEffect(() => {
-      getData();
-   }, [storedValue]);
+   const handleDecr = () => {
+      clearLocalStorage();
+      // setEmployee([]);
 
-   const handleUpdate = () => {
-      const updatedValue = storedValue + 1;
-      setData(updatedValue);
+      // setEmployee(counter - 1);
+      // setEmployee(employee.slice(0, employee.length - 1));
+      // const newEmp = employee.filter((emp) => emp.name !== "Patel");
+      // setEmployee(newEmp);
    };
 
    return (
       <div>
          <h2>LocalStorage custom hook</h2>
-         <p>{storedValue}</p>
-         <button onClick={() => handleUpdate()}>Increment</button>
-         <button>Decrement</button>
+         <p>{JSON.stringify(employee) ?? null}</p>
+         <button onClick={handleIncr}>Increment</button>
+         <button onClick={handleDecr}>Decrement</button>
       </div>
    );
 };

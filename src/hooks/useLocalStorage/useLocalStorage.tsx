@@ -1,30 +1,49 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { UseLocalStorageRes, Value } from "./interface";
 
-export const useLocalStorage = <TData = Value,>(
+/**
+ * A hook that takes only key as an argument.
+ * It returns a array of [value, setValue] with generic type.
+ * The value will use to display data and setValue will use to update data.
+ *
+ * @example
+ * const [counter, setCounter] = useLocalStorage("counter");
+ * setCounter(counter + 1);
+ * <p>{counter}</p>
+ * @param key - Key means the name of localstorage data
+ */
+
+export function useLocalStorage<TData = Value>(
    key: string,
-   initialValue: TData
-): UseLocalStorageRes<TData> => {
-   const getData = useCallback((): TData => {
-      try {
-         const items = localStorage.getItem(key);
-         return items ? (JSON.parse(items) as TData) : initialValue;
-      } catch (error) {
-         console.warn(`Error while reading localStorage key "${key}"`, error);
-         return initialValue;
+   defaultValue: TData
+): UseLocalStorageRes<TData> {
+   const initialCheck = useCallback(() => {
+      const storedValues = localStorage.getItem(key);
+      if (storedValues) {
+         return JSON.parse(storedValues) || defaultValue;
+      } else {
+         return JSON.stringify(defaultValue);
       }
-   }, [key, initialValue]);
+   }, [key, defaultValue]);
 
-   const [storedValue, setStoredValue] = useState<TData>(getData);
+   const [value, setValue] = useState<TData>(initialCheck);
 
-   const setData = () => {
-      try {
-         localStorage.setItem(key, JSON.stringify(initialValue));
-         setStoredValue(initialValue);
-      } catch (error) {
-         console.warn(`Error while setting localStorage key "${key}"`, error);
+   useEffect(() => {
+      const storedValues = localStorage.getItem(key);
+      if (storedValues) {
+         setValue(JSON.parse(storedValues));
       }
-   };
+   }, [key]);
 
-   return { storedValue, setData, getData };
-};
+   useEffect(() => {
+      if (value) {
+         localStorage.setItem(key, JSON.stringify(value));
+      }
+   }, [key, value]);
+
+   const clearLocalStorage = useCallback(() => {
+      localStorage.removeItem(key);
+   }, [key]);
+
+   return [value, setValue, clearLocalStorage];
+}
