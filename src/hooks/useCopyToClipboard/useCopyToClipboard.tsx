@@ -1,11 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
    CopyToClipboardInterface,
    copiedValueInterface,
    textType,
 } from "./interface";
 
-export function useCopyToClipboard(): CopyToClipboardInterface {
+export default function useCopyToClipboard(): CopyToClipboardInterface {
    const allowedType = ["string", "number"];
 
    const [copiedRes, setCopiedRes] = useState<copiedValueInterface>({

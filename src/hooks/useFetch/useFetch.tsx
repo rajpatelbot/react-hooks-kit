@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
 import { UseFetchResponse } from "./interface";
 
@@ -17,7 +17,7 @@ import { UseFetchResponse } from "./interface";
  * fetchData: This is the function to fetch data with 1 or 2 arg. One argument is URL and 2nd argument is Headers.
  */
 
-export function useFetch<TData = unknown>(): UseFetchResponse<TData> {
+export default function useFetch<TData = unknown>(): UseFetchResponse<TData> {
    const [data, setData] = useState<TData | null>(null);
    const [isLoading, setIsLoading] = useState<boolean>(false);
    const [error, setError] = useState<Error | null>(null);

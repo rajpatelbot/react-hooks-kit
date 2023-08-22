@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { UseLocalStorageRes, Value } from "./interface";
 
 /**
@@ -13,7 +13,7 @@ import { UseLocalStorageRes, Value } from "./interface";
  * @param key - Key means the name of localstorage data
  */
 
-export function useLocalStorage<TData = Value>(
+export default function useLocalStorage<TData = Value>(
    key: string,
    defaultValue: TData
 ): UseLocalStorageRes<TData> {
